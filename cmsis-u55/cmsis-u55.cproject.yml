@@ -10,19 +10,7 @@ project:
     - pack: ARM::CMSIS
 
   misc:
-    - CPP:
-        - -std=gnu++17
-        - -Wno-deprecated-declarations
-    - for-compiler: AC6
-      CPP:
-        # ExecuTorch tests INFINITY while the selected bare-metal floating-point
-        # mode assumes finite values.
-        - -Wno-nan-infinity-disabled
     - for-compiler: GCC
-      C:
-        - -Wno-psabi
-      CPP:
-        - -Wno-psabi
       Link:
         - -Wl,-u,_printf_float
 

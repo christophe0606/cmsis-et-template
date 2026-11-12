@@ -8,17 +8,7 @@ project:
     - ./src
 
   misc:
-    - CPP:
-        - -std=gnu++17
-        - -Wno-deprecated-declarations
-    - for-compiler: AC6
-      CPP:
-        - -Wno-nan-infinity-disabled
     - for-compiler: GCC
-      C:
-        - -Wno-psabi
-      CPP:
-        - -Wno-psabi
       Link:
         - -Wl,-u,_printf_float
 

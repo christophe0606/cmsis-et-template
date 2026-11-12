@@ -1,0 +1,21 @@
+# Copyright 2026 Arm Limited and/or its affiliates.
+# SPDX-License-Identifier: Apache-2.0
+default:
+  misc:
+    - C:
+        - -std=c17
+        - -Wall
+        - -Wformat
+        - -Wformat-security
+        - -Wdouble-promotion
+        - -Wpointer-arith
+        - -Werror=implicit-int
+    - CPP:
+        - -std=gnu++17
+        - -Wno-deprecated-declarations
+    - for-compiler: AC6
+      C-CPP:
+        - -ffp-mode=full
+    - for-compiler: GCC
+      C-CPP:
+        - -Wno-psabi

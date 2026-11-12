@@ -11,13 +11,12 @@ list(APPEND EXTRA_CONF_FILE
 find_package(Zephyr REQUIRED HINTS $ENV{ZEPHYR_BASE})
 project(zephyr_m)
 
+zephyr_compile_options($<$<COMPILE_LANGUAGE:CXX>:-Wno-deprecated-declarations>)
+
 add_subdirectory(ai_layer)
 
-# Match the CMSIS project warning policy for third-party ExecuTorch sources
-# without suppressing diagnostics in the application or the rest of Zephyr.
+# Keep the GCC ExecuTorch warning suppression target-local.
 target_compile_options(cmsis_executorch PRIVATE
-  $<$<COMPILE_LANGUAGE:CXX>:-Wno-deprecated-declarations>
-  $<$<COMPILE_LANG_AND_ID:CXX,ARMClang>:-Wno-nan-infinity-disabled>
   $<$<COMPILE_LANG_AND_ID:CXX,GNU>:-Wno-psabi>
 )
 
@@ -33,6 +32,15 @@ endif()
 # Zephyr already provides sys/types.h for AC6; the bare-metal pack shim
 # must not shadow it. Only libc++ needs compatibility adjustments here.
 if(CMAKE_CXX_COMPILER_ID STREQUAL "ARMClang")
+  zephyr_compile_options(-ffp-mode=full)
+  # AC6 ctype macros return shifted bit masks; Zephyr's fnmatch.c uses them
+  # as booleans. Put the suppression on the source so it follows -Wall;
+  # a target option precedes Zephyr's flags and gets overridden by AC6.
+  if(TARGET lib__posix__c_lib_ext)
+    set_property(SOURCE "${ZEPHYR_BASE}/lib/posix/c_lib_ext/fnmatch.c"
+      TARGET_DIRECTORY lib__posix__c_lib_ext
+      APPEND PROPERTY COMPILE_OPTIONS -Wno-int-in-bool-context)
+  endif()
   # AC6 6.24's register coalescer crashes on this pack's quantization code
   # with hard-float at -Og/-O1; -O2 avoids it and keeps the kernel optimized.
   if(CONFIG_FP_HARDABI)
