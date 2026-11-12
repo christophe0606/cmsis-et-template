@@ -16,9 +16,12 @@ endif()
 find_package(Zephyr REQUIRED HINTS $ENV{ZEPHYR_BASE})
 project(my_app)
 
-zephyr_compile_options($<$<COMPILE_LANGUAGE:CXX>:-Wno-deprecated-declarations>)
-
 add_subdirectory(ai_layer)
+
+# Keep ExecuTorch warning suppressions local to its library.
+target_compile_options(cmsis_executorch PRIVATE
+  $<$<COMPILE_LANGUAGE:CXX>:-Wno-deprecated-declarations>
+)
 
 # Zephyr already provides sys/types.h for AC6; the bare-metal pack shim
 # must not shadow it. Only libc++ needs compatibility adjustments here.

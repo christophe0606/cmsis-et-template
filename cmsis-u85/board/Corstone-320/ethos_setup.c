@@ -16,7 +16,8 @@
  * limitations under the License.
  */
 
- #include <stdio.h>
+#include <inttypes.h>
+#include <stdio.h>
 
 #include "RTE_Components.h"
 #include  CMSIS_device_header
@@ -94,10 +95,11 @@ void ethos_setup (void) {
     ethosu_get_hw_info(&EthosDriver, &hw_info);
 
     printf("Ethos-U version info:\n");
-    printf("\tArch:       v%u.%u.%u\n", hw_info.version.arch_major_rev,
-                                        hw_info.version.arch_minor_rev,
-                                        hw_info.version.arch_patch_rev);
-    printf("\tMACs/cc:    %u\n", (uint32_t)(1 << hw_info.cfg.macs_per_cc));
-    printf("\tCmd stream: v%u\n", hw_info.cfg.cmd_stream_version);
+    printf("\tArch:       v%" PRIu32 ".%" PRIu32 ".%" PRIu32 "\n",
+           hw_info.version.arch_major_rev,
+           hw_info.version.arch_minor_rev,
+           hw_info.version.arch_patch_rev);
+    printf("\tMACs/cc:    %" PRIu32 "\n", (uint32_t)(1 << hw_info.cfg.macs_per_cc));
+    printf("\tCmd stream: v%" PRIu32 "\n", hw_info.cfg.cmd_stream_version);
   }
 }

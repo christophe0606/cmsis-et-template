@@ -11,12 +11,11 @@ list(APPEND EXTRA_CONF_FILE
 find_package(Zephyr REQUIRED HINTS $ENV{ZEPHYR_BASE})
 project(zephyr_m)
 
-zephyr_compile_options($<$<COMPILE_LANGUAGE:CXX>:-Wno-deprecated-declarations>)
-
 add_subdirectory(ai_layer)
 
-# Keep the GCC ExecuTorch warning suppression target-local.
+# Keep ExecuTorch warning suppressions local to its library.
 target_compile_options(cmsis_executorch PRIVATE
+  $<$<COMPILE_LANGUAGE:CXX>:-Wno-deprecated-declarations>
   $<$<COMPILE_LANG_AND_ID:CXX,GNU>:-Wno-psabi>
 )
 
