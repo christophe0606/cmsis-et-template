@@ -8,8 +8,17 @@
 /* The SSE-320 FVP exposes UART0 in the BSP's FPGA UART window at 0x59303000.
  * The reg value is relative to the peripheral bus's 0x50000000 base.
  */
-&uart0 {
-	reg = <0x09303000 0x1000>;
+/delete-node/ &uart0;
+
+&{/soc/peripheral@50000000} {
+	uart0: uart@9303000 {
+		compatible = "arm,cmsdk-uart";
+		reg = <0x09303000 0x1000>;
+		interrupts = <34 3 33 3>;
+		interrupt-names = "tx", "rx";
+		clocks = <&sysclk>;
+		current-speed = <115200>;
+	};
 };
 
 /* These external UARTs use GPIO pin muxing that faults on the FVP. */

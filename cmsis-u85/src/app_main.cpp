@@ -118,8 +118,8 @@ extern "C" int app_main(void) {
     printf("Output: %u element(s):", static_cast<unsigned>(t.numel()));
     if (t.scalar_type() == ScalarType::Float) {
       const float* p = t.const_data_ptr<float>();
-      for (size_t i = 0; i < t.numel(); ++i) {
-        printf(" %.4f", p[i]);
+      for (int64_t i = 0; i < t.numel(); ++i) {
+        printf(" %.4f", static_cast<double>(p[i]));
       }
     }
     printf("\n");

@@ -21,6 +21,7 @@ add_subdirectory(ai_layer)
 # Keep ExecuTorch warning suppressions local to its library.
 target_compile_options(cmsis_executorch PRIVATE
   $<$<COMPILE_LANGUAGE:CXX>:-Wno-deprecated-declarations>
+  $<$<COMPILE_LANG_AND_ID:CXX,GNU>:-Wno-psabi>
 )
 
 # Zephyr already provides sys/types.h for AC6; the bare-metal pack shim
