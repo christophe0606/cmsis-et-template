@@ -2,6 +2,9 @@
 # SPDX-License-Identifier: Apache-2.0
 default:
   misc:
+    - C-CPP:
+        # Free a register for CMSIS-NN MVE inline assembly even at -O0.
+        - -fomit-frame-pointer
     - C:
         - -std=c17
         - -Wall

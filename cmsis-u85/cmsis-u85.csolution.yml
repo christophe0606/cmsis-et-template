@@ -9,7 +9,8 @@ solution:
 
   created-for: CMSIS-Toolbox@2.15.0
   cdefault:
-  compiler: GCC@14.3.1
+  #compiler: GCC@14.3.1
+  compiler: AC6
 
   packs:
     # The PyTorch::ExecuTorch pack version must match the ExecuTorch Python
