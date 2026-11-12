@@ -5,13 +5,13 @@ default:
     - C-CPP:
         # Free a register for CMSIS-NN MVE inline assembly even at -O0.
         - -fomit-frame-pointer
-    - C:
-        - -std=c17
         - -Wall
         - -Wformat
         - -Wformat-security
         - -Wdouble-promotion
         - -Wpointer-arith
+    - C:
+        - -std=c17
         - -Werror=implicit-int
     - CPP:
         - -std=gnu++17
