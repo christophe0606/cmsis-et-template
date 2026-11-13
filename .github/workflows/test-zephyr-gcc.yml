@@ -85,7 +85,7 @@ jobs:
       - name: Install repository packs
         run: |
           cpackget add --agree-embedded-license Pack/*.pack
-          test -f "${CMSIS_PACK_ROOT}/PyTorch/ExecuTorch/1.6.0-zephyrpreview1/PyTorch.ExecuTorch.pdsc"
+          test -f "${CMSIS_PACK_ROOT}/PyTorch/ExecuTorch/1.6.0-zephyrpreview2/PyTorch.ExecuTorch.pdsc"
 
       - name: Cache Zephyr workspace
         uses: actions/cache@v6

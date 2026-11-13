@@ -6,7 +6,7 @@ layer:
   description: TinyCNN for an Ethos-U55-256 target
 
   packs:
-    - pack: PyTorch::ExecuTorch@1.6.0-zephyrpreview1
+    - pack: PyTorch::ExecuTorch@1.6.0-zephyrpreview2
 
   define:
     - ET_LOG_ENABLED: 0

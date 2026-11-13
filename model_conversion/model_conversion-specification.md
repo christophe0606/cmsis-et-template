@@ -309,8 +309,11 @@ runtime component set, every backend needed by at least one output program, and
 the union of CPU fallback-operator components across all output `.pte` files.
 Repeated components shall be de-duplicated and sorted. Select Backend EthosU
 once if any output program is delegated. Add `ARM::CMSIS-NN` without a version,
-`CMSIS:NN Lib`, and required defines when any selected CPU fallback operator
-requires CMSIS-NN.
+`CMSIS:NN Lib` when any selected CPU fallback operator requires CMSIS-NN.
+Emit both `ARM_NN_ENABLE_F16: 1` and `ARM_NN_ENABLE_F32: 1` whenever CMSIS-NN
+is required, including integer-only operators. This works around missing
+preprocessor guards in the current CMSIS-NN pack. Emit neither define when
+CMSIS-NN is not required.
 
 With `model.zephyr`, the directory shall additionally receive `CMakeLists.txt`,
 `components.conf`, and `operators.conf` alongside the `*.clayer.yml`.
@@ -320,6 +323,8 @@ program files or independently calculate an operator union. The CMake file
 shall add every embedded-program C file directly and exactly once to Zephyr's
 `app` target for every compiler. The configuration fragments shall enable the
 same runtime, backends, and fallback-operator components as the CMSIS layer.
+The generated CMake file shall apply the same floating-point CMSIS-NN defines
+with `zephyr_compile_definitions`, so they reach both ExecuTorch and CMSIS-NN.
 
 The consuming Zephyr application's root CMake file shall append the generated
 configuration fragments to `EXTRA_CONF_FILE` before `find_package(Zephyr)` and

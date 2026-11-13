@@ -6,7 +6,7 @@ layer:
   description: TinyCNN int8 image classifier for Cortex-M55
 
   packs:
-    - pack: PyTorch::ExecuTorch@1.6.0-zephyrpreview1
+    - pack: PyTorch::ExecuTorch@1.6.0-zephyrpreview2
     - pack: ARM::CMSIS-NN
 
   define:

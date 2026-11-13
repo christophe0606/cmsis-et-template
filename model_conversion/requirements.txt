@@ -3,7 +3,7 @@
 #
 # executorch, torch and torchao must match: a .pte exported by one ExecuTorch
 # version only loads in the runtime of the same version, and that runtime is
-# supplied PyTorch::ExecuTorch@1.6.0-zephyrpreview1 pack uses Python package
+# supplied PyTorch::ExecuTorch@1.6.0-zephyrpreview2 pack uses Python package
 # version 1.6.0. Keep these pins and the csolution pack pins aligned.
 # The export environment supports Python 3.10 to 3.13 (see setup_venv.py).
 executorch==1.6.0

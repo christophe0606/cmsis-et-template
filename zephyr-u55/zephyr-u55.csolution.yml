@@ -12,7 +12,7 @@ solution:
     - pack: AlifSemiconductor::Ensemble@^2.2.0-0
     # ExecuTorch is an external Zephyr module. The Ethos-U driver itself is
     # supplied by upstream Zephyr 4.5 and its hal_ethos_u module.
-    - pack: PyTorch::ExecuTorch@1.6.0-zephyrpreview1
+    - pack: PyTorch::ExecuTorch@1.6.0-zephyrpreview2
 
   target-types:
     - type: AppKit-E8

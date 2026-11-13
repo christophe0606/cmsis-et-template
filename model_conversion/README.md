@@ -349,11 +349,16 @@ For both CMSIS and Zephyr, the script creates the `*.clayer.yml` file specified 
 ExecuTorch runtime, required backends, and the union of CPU fallback-operator
 components extracted from all `.pte` program files. CPU-only layers omit `Backend
 EthosU`; CMSIS-NN is selected when any fallback operator requires it.
+Whenever CMSIS-NN is required, the layer enables both `ARM_NN_ENABLE_F16`
+and `ARM_NN_ENABLE_F32`, including for integer-only operators, to work around
+missing preprocessor guards in the current CMSIS-NN pack.
 
 For Zephyr, the script additionally creates
 `CMakeLists.txt`, `components.conf`, and `operators.conf` for the Zephyr
 application. The clayer remains available to other tools. Both integration
 formats use the same validated layer data.
+The generated CMake file applies the same floating-point defines to Zephyr
+with `zephyr_compile_definitions`.
 
 Add the generated configuration fragments before Zephyr processes the
 configuration, then add the AI-layer directory after creating the application:

@@ -12,7 +12,7 @@ solution:
     - pack: AlifSemiconductor::Ensemble@^2.2.0-0
     # ExecuTorch is an external Zephyr module. CMSIS-NN is supplied by the
     # Zephyr workspace and selected through Kconfig.
-    - pack: PyTorch::ExecuTorch@1.6.0-zephyrpreview1
+    - pack: PyTorch::ExecuTorch@1.6.0-zephyrpreview2
 
   target-types:
     - type: AppKit-E8

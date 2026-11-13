@@ -156,7 +156,7 @@ west:
 | `CMAKE_CXX_FLAGS: -includestddef.h` | Applies the current ExecuTorch header compatibility workaround to the FVP build. The single argument keeps the header attached to `-include` when CMSIS-Toolbox invokes CMake. |
 | Debug `CONFIG_*` definitions | Enable Zephyr debug information, thread information, and debug optimization for the `Debug` build type. |
 | Release `CONFIG_SPEED_OPTIMIZATIONS` | Selects Zephyr's speed optimization for the `Release` build type. |
-| `EXTRA_ZEPHYR_MODULES: ${CMSIS_PACK_ROOT}/PyTorch/ExecuTorch/1.6.0-zephyrpreview1` | Makes the installed ExecuTorch pack root an external Zephyr module. This exposes the pack's Kconfig symbols, CMake sources, runtime, operators, and Ethos-U backend. |
+| `EXTRA_ZEPHYR_MODULES: ${CMSIS_PACK_ROOT}/PyTorch/ExecuTorch/1.6.0-zephyrpreview2` | Makes the installed ExecuTorch pack root an external Zephyr module. This exposes the pack's Kconfig symbols, CMake sources, runtime, operators, and Ethos-U backend. |
 
 The `mlops:` node is consumed before the application build. Solution setup
 generates `zephyr-u85.cbuild-mlops.yml`; `create_ai_layer.py` reads that file,

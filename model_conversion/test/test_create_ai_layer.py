@@ -525,7 +525,7 @@ class CreateAiLayerTests(unittest.TestCase):
             self.assertEqual(generator.executorch_version(mlops), "1.5.1")
 
     def test_executorch_version_uses_generated_build_selection(self) -> None:
-        for active_version in ("1.5.1", "1.6.0-zephyrpreview1"):
+        for active_version in ("1.5.1", "1.6.0-zephyrpreview2"):
             for reverse in (False, True):
                 with self.subTest(version=active_version, reverse=reverse), tempfile.TemporaryDirectory() as temporary:
                     root = Path(temporary)
@@ -536,7 +536,7 @@ class CreateAiLayerTests(unittest.TestCase):
                     entries = [
                         {"resolved-pack": f"PyTorch::ExecuTorch@{version}",
                          "selected-by-pack": [f"PyTorch::ExecuTorch@{version}"]}
-                        for version in ("1.5.1", "1.6.0-zephyrpreview1")
+                        for version in ("1.5.1", "1.6.0-zephyrpreview2")
                     ]
                     (root / "demo.cbuild-pack.yml").write_text(yaml.safe_dump({
                         "cbuild-pack": {"resolved-packs": entries[::-1] if reverse else entries},
@@ -600,7 +600,7 @@ class CreateAiLayerTests(unittest.TestCase):
         with mock.patch.object(
             generator.importlib.metadata, "version", return_value="1.6.0"
         ):
-            generator.check_executorch_version("1.6.0-zephyrpreview1")
+            generator.check_executorch_version("1.6.0-zephyrpreview2")
 
     def test_components_select_known_operators(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -692,6 +692,7 @@ class CreateAiLayerTests(unittest.TestCase):
         self.assertIn("pack: PyTorch::ExecuTorch@1.5.1", layer)
         self.assertIn("component: Machine Learning:ExecuTorch Operators:Portable add", layer)
         self.assertIn("file: ./model_pte.c", layer)
+        self.assertNotIn("ARM_NN_ENABLE_F", layer)
 
     def test_cpu_layer_adds_unversioned_cmsis_nn(self) -> None:
         layer = generator.clayer(
@@ -706,6 +707,8 @@ class CreateAiLayerTests(unittest.TestCase):
         self.assertNotIn("pack: ARM::CMSIS-NN@", layer)
         self.assertIn("component: CMSIS:NN Lib", layer)
         self.assertNotIn("Backend EthosU", layer)
+        self.assertIn("    - ARM_NN_ENABLE_F32: 1", layer)
+        self.assertIn("    - ARM_NN_ENABLE_F16: 1", layer)
 
     def test_vela_summary_records_effective_configuration_and_report(self) -> None:
         summary = generator.vela_summary(
@@ -764,6 +767,7 @@ class CreateAiLayerTests(unittest.TestCase):
             metadata["operators.conf"],
         )
         self.assertIn("CONFIG_CMSIS_EXECUTORCH_BACKEND_ETHOS_U=y", metadata["components.conf"])
+        self.assertNotIn("ARM_NN_ENABLE_F", metadata["CMakeLists.txt"])
 
     def test_cpu_zephyr_metadata_omits_ethosu_backend(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -774,10 +778,14 @@ class CreateAiLayerTests(unittest.TestCase):
                 encoding="utf-8",
             )
             metadata = generator.zephyr_metadata(
-                ["Cortex-M quantized_conv2d"], pack, delegated=False
+                ["Cortex-M quantized_conv2d"], pack, delegated=False, cmsis_nn=True
             )
 
         self.assertNotIn("BACKEND_ETHOS_U", metadata["components.conf"])
+        self.assertIn(
+            "zephyr_compile_definitions(ARM_NN_ENABLE_F32=1 ARM_NN_ENABLE_F16=1)",
+            metadata["CMakeLists.txt"],
+        )
         self.assertIn(
             "CONFIG_CMSIS_EXECUTORCH_OP_CORTEX_M_QUANTIZED_CONV2D=y",
             metadata["operators.conf"],
@@ -992,7 +1000,7 @@ class CreateAiLayerTests(unittest.TestCase):
             self.assertNotIn("Backend EthosU", layer)
             if zephyr:
                 zephyr_metadata.assert_called_once_with(
-                    ["Cortex-M quantized_conv2d"], solution_dir / "pack", False, mock.ANY
+                    ["Cortex-M quantized_conv2d"], solution_dir / "pack", False, mock.ANY, cmsis_nn=True
                 )
                 self.assertTrue((output / "components.conf").is_file())
             else:
@@ -1111,8 +1119,8 @@ class CreateAiLayerTests(unittest.TestCase):
             ), mock.patch.object(generator, "operator_components", side_effect=map_components), mock.patch.object(
                 generator,
                 "zephyr_metadata",
-                side_effect=lambda operators, pack, delegated, models: {
-                    "CMakeLists.txt": generator.zephyr_cmake(models),
+                side_effect=lambda operators, pack, delegated, models, cmsis_nn: {
+                    "CMakeLists.txt": generator.zephyr_cmake(models, cmsis_nn=cmsis_nn),
                     "components.conf": "components\n",
                     "operators.conf": "operators\n",
                 },
@@ -1141,6 +1149,9 @@ class CreateAiLayerTests(unittest.TestCase):
                 cmake = (output / "CMakeLists.txt").read_text(encoding="utf-8")
                 self.assertEqual(cmake.count("NpuModel_pte.c"), 1)
                 self.assertEqual(cmake.count("CpuModel_pte.c"), 1)
+                self.assertIn(
+                    "zephyr_compile_definitions(ARM_NN_ENABLE_F32=1 ARM_NN_ENABLE_F16=1)", cmake
+                )
 
     def test_main_lowers_multi_program_pt2_to_one_pte(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -1288,7 +1299,7 @@ class CreateAiLayerTests(unittest.TestCase):
             self.assertIn("group: B", layer)
             if zephyr:
                 zephyr_metadata.assert_called_once_with(
-                    ["Portable add"], solution / "pack", True, mock.ANY
+                    ["Portable add"], solution / "pack", True, mock.ANY, cmsis_nn=False
                 )
                 self.assertTrue((layer_dir / "operators.conf").is_file())
             else:

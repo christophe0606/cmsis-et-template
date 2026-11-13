@@ -6,7 +6,7 @@ layer:
   description: TinyCNN int8 image classifier for Ethos-U55-128
 
   packs:
-    - pack: PyTorch::ExecuTorch@1.6.0-zephyrpreview1
+    - pack: PyTorch::ExecuTorch@1.6.0-zephyrpreview2
 
   define:
     - ET_LOG_ENABLED: 0

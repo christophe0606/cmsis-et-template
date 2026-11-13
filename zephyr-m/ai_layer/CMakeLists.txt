@@ -4,3 +4,4 @@ target_sources(app PRIVATE
   "${CMAKE_CURRENT_SOURCE_DIR}/TinyCNN_pte.c"
 )
 target_include_directories(app PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
+zephyr_compile_definitions(ARM_NN_ENABLE_F32=1 ARM_NN_ENABLE_F16=1)

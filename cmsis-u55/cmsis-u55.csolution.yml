@@ -11,10 +11,14 @@ solution:
   cdefault:
   compiler: AC6
 
+  output-dirs:
+    # Keep GCC dependency-file paths below the Windows path-length limit.
+    tmpdir: ../tmp/u55
+
   packs:
     # The PyTorch::ExecuTorch pack version must match the ExecuTorch Python
     # exporter in requirements.txt because its runtime consumes the generated .pte.
-    - pack: PyTorch::ExecuTorch@1.6.0-zephyrpreview1
+    - pack: PyTorch::ExecuTorch@1.6.0-zephyrpreview2
     - pack: ARM::Cortex_DFP
 
   target-types:

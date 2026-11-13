@@ -64,7 +64,7 @@ single-model `app_main.cpp`.
 
 Then run the usual setup, conversion, and build steps for that solution. Keep
 the Python ExecuTorch package and selected pack versions matched (these
-examples use Python 1.6.0 and pack `1.6.0-zephyrpreview1`). Re-run setup after
+examples use Python 1.6.0 and pack `1.6.0-zephyrpreview2`). Re-run setup after
 editing the solution so its generated `.cbuild-mlops.yml` selects the new input.
 The preview pack is supplied in `Pack/`; install it with the CMSIS pack manager
 before setup if it is not already installed. The CMSIS CI workflows install
